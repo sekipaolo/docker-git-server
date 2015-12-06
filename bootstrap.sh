@@ -7,10 +7,13 @@ log() {
   else echo; fi
 }
 
-KEYS_DIR=/home/git/keys
-SSH_CMD="$(which sshd) -D"
-
-rsyslogd
+add_keys(){
+	mkdir -p /home/git/.ssh 
+	touch /home/git/.ssh/authorized_keys 
+	cat /home/git/keys/*.pub > /home/git/.ssh/authorized_keys 
+	chown -R git:git /home/git/
+	chmod -R 700 /home/git/  
+}
 
 make_repos(){
 	for REPO in "configs"; do		
@@ -23,6 +26,13 @@ make_repos(){
 		fi
 	done
 }
+
+KEYS_DIR=/home/git/keys
+SSH_CMD="$(which sshd) -D"
+
+rsyslogd
+
+add_keys
 make_repos
 log "waiting 1 seconds"
 sleep 1

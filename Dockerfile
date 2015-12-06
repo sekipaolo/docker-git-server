@@ -18,15 +18,8 @@ RUN ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key
 WORKDIR /root
 COPY sshd_config /etc/shh/sshd_config
 COPY rsyslog.conf /etc/rsyslog.conf
-#COPY keys/ /home/git/keys
 
-COPY git.run run
-RUN chmod +x run
+COPY bootstrap.sh bootstrap.sh
+RUN chmod +x bootstrap.sh
 
-RUN mkdir -p /home/git/.ssh && \
-	touch /home/git/.ssh/authorized_keys  && \
-	cat /home/git/keys/*.pub > /home/git/.ssh/authorized_keys  && \
-	chown -R git:git /home/git/  && \
-	chmod -R 700 /home/git/  
-
-CMD /root/run
+CMD /root/bootstrap.sh
